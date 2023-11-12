@@ -9,20 +9,22 @@ import (
 	"simplebank.com/internal/handler"
 	"simplebank.com/internal/repository"
 	"simplebank.com/internal/server"
+	"simplebank.com/internal/utils"
+
+	_ "github.com/lib/pq"
 )
 
-
-
-const (
-    dbDriver = "postgres"
-    dbSource = "postgresql://root:secret@localhost:5432/simple_bank?sslmode=disable"
-)
 
 
 func main() {
+
+    config, err := utils.LoadConfig("../")
+    if err != nil {
+        log.Fatal("cannot load config:", err)
+    }
 	 
 	// connect to db
-	conn, err := sql.Open(dbDriver, dbSource)
+	conn, err := sql.Open(config.DBDriver, config.DBSource)
 	if err != nil {
 		log.Fatal("cannot connect to db:", err)
 	}
@@ -42,5 +44,5 @@ func main() {
 
 	// start server
 	fmt.Println("Server is running at port 8080")
-	server.Start(":8080")
+	server.Start(config.ServerAddress)
 }

@@ -3,6 +3,8 @@ package utils
 import (
 	"math/rand"
 	"time"
+
+	"github.com/spf13/viper"
 )
 
 
@@ -38,4 +40,30 @@ func RandomCurrency() string {
 	currencies := []string{"EUR", "USD", "CAD"}
 	n := len(currencies)
 	return currencies[rand.Intn(n)]
+}
+
+
+
+type Config struct {
+    DBDriver      string `mapstructure:"DB_DRIVER"`
+    DBSource      string `mapstructure:"DB_SOURCE"`
+    ServerAddress string `mapstructure:"SERVER_ADDRESS"`
+}
+
+func LoadConfig(path string) (config Config, err error) {
+	viper.AddConfigPath(path)
+	viper.SetConfigName("app")
+	viper.SetConfigType("env")
+
+	viper.AutomaticEnv()
+
+	err = viper.ReadInConfig()
+
+	if err != nil {
+		return
+	}
+
+	err = viper.Unmarshal(&config)
+
+	return
 }

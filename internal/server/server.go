@@ -1,6 +1,8 @@
 package server
 
 import (
+	"strconv"
+
 	"github.com/gin-gonic/gin"
 	"simplebank.com/internal/handler"
 )
@@ -16,10 +18,11 @@ func NewServer(handler *handler.Handler) *Server {
 		handler: handler,
 	}
 
-	route := gin.Default()
-	route.POST("/accounts", server.createAccount)
+	router := gin.Default()
+	router.POST("/accounts", server.createAccount)
+	router.GET("/accounts/:id", server.getAccount)
 
-	server.router = route
+	server.router = router
 
 	return server
 }
@@ -43,6 +46,8 @@ type createAccountRequest struct {
 }
 
 
+
+
 func errorResponse(err error) gin.H {
     return gin.H{"error": err.Error()}
 }
@@ -61,6 +66,22 @@ func (server *Server) createAccount(ctx *gin.Context) {
 	}
 
 	account, err := server.handler.CreateAccount(ctx, arg)
+	if err != nil {
+		ctx.JSON(500, errorResponse(err))
+		return
+	}
+
+	ctx.JSON(200, account)
+}
+
+func (server *Server) getAccount(ctx *gin.Context) {
+	id, err := strconv.ParseInt(ctx.Param("id"), 10, 64)
+	if err != nil {
+		ctx.JSON(400, errorResponse(err))
+		return
+	}
+
+	account, err := server.handler.GetAccount(ctx, handler.GetAccountParams{ID: id})
 	if err != nil {
 		ctx.JSON(500, errorResponse(err))
 		return

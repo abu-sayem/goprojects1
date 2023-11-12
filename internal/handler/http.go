@@ -38,3 +38,15 @@ func (handler *Handler) CreateAccount(ctx context.Context, arg CreateAccountPara
 	return handler.controller.CreateAccount(ctx, params)
 }
 
+
+
+type GetAccountParams struct {
+	ID int64 `uri:"id" binding:"required,min=1"`
+}
+
+func (handler *Handler) GetAccount(ctx context.Context, arg GetAccountParams) (models.Account, error) {
+	params := controller.GetAccountParams{
+		ID: arg.ID,
+	}
+	return handler.controller.GetAccount(ctx, params)
+}

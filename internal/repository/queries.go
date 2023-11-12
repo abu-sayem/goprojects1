@@ -222,3 +222,5 @@ func (r *Repository) GetAccountForUpdate(ctx context.Context, id int64) (models.
 	)
 	return i, err
 }
+
+

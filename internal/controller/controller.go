@@ -9,10 +9,10 @@ import (
 
 
 type Controller struct {
-	repo *repository.Store
+	repo repository.Store
 }
 
-func NewController(repo *repository.Store) *Controller {
+func NewController(repo repository.Store) *Controller {
 	return &Controller{
 		repo: repo,
 	}

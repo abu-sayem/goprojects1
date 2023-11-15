@@ -4,25 +4,33 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	_ "github.com/golang/mock/mockgen/model"
 
 	models "simplebank.com/pkg"
 )
 
-type Store struct {
+type SQLStore struct {
 	*Repository
 	db *sql.DB
 }
 
 
-func NewStore(db *sql.DB) *Store {
-    return &Store{
+//go:generate mockgen -destination=mock/mock_store.go -package=mock . Store
+type Store interface {
+	Querier
+	TransferTx(ctx context.Context, arg TransferTxParams) (TransferTxResult, error)
+}
+
+
+func NewStore(db *sql.DB) *SQLStore {
+    return &SQLStore{
         db:      db,
         Repository: New(db),
     }
 }
 
 
-func (store *Store) execTx(ctx context.Context, fn func(*Repository) error) error {
+func (store *SQLStore) execTx(ctx context.Context, fn func(*Repository) error) error {
 	tx, err := store.db.BeginTx(ctx, nil)
 	if err != nil {
 		return err
@@ -57,7 +65,7 @@ type TransferTxParams struct {
 
 var txKey = struct{}{}
 
-func (store *Store) TransferTx(ctx context.Context, arg TransferTxParams) (TransferTxResult, error) {
+func (store *SQLStore) TransferTx(ctx context.Context, arg TransferTxParams) (TransferTxResult, error) {
 
 	var result TransferTxResult
 

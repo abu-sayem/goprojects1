@@ -2,7 +2,9 @@ package repository
 
 import (
 	"context"
+
 	models "simplebank.com/pkg"
+	pkg "simplebank.com/pkg/params"
 )
 
 const (
@@ -71,7 +73,7 @@ const (
 	`
 )
 
-func (q *Repository) CreateAccount(ctx context.Context, arg CreateAccountParams) (models.Account, error) {
+func (q *Repository) CreateAccount(ctx context.Context, arg pkg.CreateAccountParams) (models.Account, error) {
 	row := q.db.QueryRowContext(ctx, createAccount, arg.Owner, arg.Balance, arg.Currency)
 	var i models.Account
 	err := row.Scan(
@@ -84,11 +86,7 @@ func (q *Repository) CreateAccount(ctx context.Context, arg CreateAccountParams)
 	return i, err
 }
 
-type CreateAccountParams struct {
-	Owner    string `json:"owner"`
-	Balance  int64  `json:"balance"`
-	Currency string `json:"currency"`
-}
+
 
 func (q *Repository) DeleteAccount(ctx context.Context, id int64) error {
 	_, err := q.db.QueryContext(ctx, deleteAccount, id)
@@ -108,12 +106,9 @@ func (q *Repository) GetAccount(ctx context.Context, id int64) (models.Account, 
 	return i, err
 }
 
-type ListAccountsParams struct {
-	Limit  int32 `json:"limit"`
-	Offset int32 `json:"offset"`
-}
 
-func (q *Repository) ListAccounts(ctx context.Context, arg ListAccountsParams) ([]models.Account, error) {
+
+func (q *Repository) ListAccounts(ctx context.Context, arg pkg.ListAccountsParams) ([]models.Account, error) {
 	rows, err := q.db.QueryContext(ctx, listAccounts, arg.Limit, arg.Offset)
 	if err != nil {
 		return nil, err
@@ -139,12 +134,9 @@ func (q *Repository) ListAccounts(ctx context.Context, arg ListAccountsParams) (
 	return items, nil
 }
 
-type UpdateAccountParams struct {
-	ID      int64 `json:"id"`
-	Balance int64 `json:"balance"`
-}
 
-func (q *Repository) UpdateAccount(ctx context.Context, arg UpdateAccountParams) (models.Account, error) {
+
+func (q *Repository) UpdateAccount(ctx context.Context, arg pkg.UpdateAccountParams) (models.Account, error) {
 	row := q.db.QueryRowContext(ctx, updateAccount, arg.ID, arg.Balance)
 	var i models.Account
 	err := row.Scan(
@@ -158,13 +150,10 @@ func (q *Repository) UpdateAccount(ctx context.Context, arg UpdateAccountParams)
   }
 
 
-type CreateEntryParams struct {
-	AccountID int64 `json:"account_id"`
-	Amount    int64 `json:"amount"`
-}
 
 
-func (q *Repository) CreateEntry(ctx context.Context, arg CreateEntryParams) (models.Entry, error) {
+
+func (q *Repository) CreateEntry(ctx context.Context, arg pkg.CreateEntryParams) (models.Entry, error) {
 	row := q.db.QueryRowContext(ctx, createEntry, arg.AccountID, arg.Amount)
 	var i models.Entry
 	err := row.Scan(
@@ -177,13 +166,7 @@ func (q *Repository) CreateEntry(ctx context.Context, arg CreateEntryParams) (mo
 }
 
 
-type CreateTransferParams struct {
-	FromAccountID int64 `json:"from_account_id"`
-	ToAccountID   int64 `json:"to_account_id"`
-	Amount        int64 `json:"amount"`
-}
-
-func (q *Repository) CreateTransfer(ctx context.Context, arg CreateTransferParams) (models.Transfer, error) {
+func (q *Repository) CreateTransfer(ctx context.Context, arg pkg.CreateTransferParams) (models.Transfer, error) {
 	row := q.db.QueryRowContext(ctx, createTransfer, arg.FromAccountID, arg.ToAccountID, arg.Amount)
 	var i models.Transfer
 	err := row.Scan(

@@ -10,6 +10,7 @@ import (
 	_ "github.com/lib/pq"
 	"github.com/stretchr/testify/require"
 	"simplebank.com/internal/utils"
+	pkg "simplebank.com/pkg/params"
 )
 
 
@@ -33,14 +34,14 @@ func TestTransferTx(t *testing.T) {
 	n := 2
 	amount := utils.RandomMoney()
 	errs := make(chan error)
-	results := make(chan TransferTxResult)
+	results := make(chan pkg.TransferTxResult)
 
 	// Run n concurrent transfer transactions
 	for i := 0; i < n; i++ {
 		tx_name := fmt.Sprintf("tx %d", i+1)
 		go func() {
 			ctx := context.WithValue(context.Background(), txKey, tx_name)
-			result, err := store.TransferTx(ctx, TransferTxParams{
+			result, err := store.TransferTx(ctx, pkg.TransferTxParams{
 				FromAccountID: account1.ID,
 				ToAccountID:   account2.ID,
 				Amount:        amount,

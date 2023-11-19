@@ -5,6 +5,7 @@ import (
 
 	"simplebank.com/internal/repository"
 	models "simplebank.com/pkg"
+	pkg "simplebank.com/pkg/params"
 )
 
 
@@ -19,16 +20,16 @@ func NewController(repo repository.Store) *Controller {
 }
 
 
-func (controller *Controller) CreateAccount(ctx context.Context, arg repository.CreateAccountParams) (models.Account, error) {
+func (controller *Controller) CreateAccount(ctx context.Context, arg pkg.CreateAccountParams) (models.Account, error) {
 	return controller.repo.CreateAccount(ctx, arg)
 }
 
 
-func (controller *Controller) ListAccounts(ctx context.Context, arg repository.ListAccountsParams) ([]models.Account, error) {
+func (controller *Controller) ListAccounts(ctx context.Context, arg pkg.ListAccountsParams) ([]models.Account, error) {
 	return controller.repo.ListAccounts(ctx, arg)
 }
 
-func (controller *Controller) CreateEntry(ctx context.Context, arg repository.CreateEntryParams) (models.Entry, error) {
+func (controller *Controller) CreateEntry(ctx context.Context, arg pkg.CreateEntryParams) (models.Entry, error) {
 	return controller.repo.CreateEntry(ctx, arg)
 }
 

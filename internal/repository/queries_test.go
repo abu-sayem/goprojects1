@@ -7,13 +7,16 @@ import (
 	"testing"
 	"time"
 
+	pkg "simplebank.com/pkg/params"
+
 	"context"
 
 	"simplebank.com/internal/utils"
 	models "simplebank.com/pkg"
 
-	"github.com/stretchr/testify/require"
+
 	_ "github.com/lib/pq"
+	"github.com/stretchr/testify/require"
 )
 
 
@@ -42,7 +45,7 @@ func TestMain(m *testing.M) {
 
 
 func createRandomAccount(t *testing.T) models.Account {
-	arg := CreateAccountParams{
+	arg := pkg.CreateAccountParams{
 		Owner:    utils.RandomOwner(),
 		Balance:  utils.RandomMoney(),
 		Currency: utils.RandomCurrency(),
@@ -85,7 +88,7 @@ func TestGetAccount(t *testing.T) {
 func TestUpdateAccount(t *testing.T) {
 	account1 := createRandomAccount(t)
 
-	arg := UpdateAccountParams{
+	arg := pkg.UpdateAccountParams{
 		ID:      account1.ID,
 		Balance: utils.RandomMoney(),
 	}
@@ -121,7 +124,7 @@ func TestListAccounts(t *testing.T) {
 		createRandomAccount(t)
 	}
 
-	arg := ListAccountsParams{
+	arg := pkg.ListAccountsParams{
 		Limit:  5,
 		Offset: 5,
 	}
@@ -134,3 +137,4 @@ func TestListAccounts(t *testing.T) {
 		require.NotEmpty(t, account)
 	}
 }
+

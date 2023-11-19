@@ -4,11 +4,9 @@ import (
 	"context"
 
 	"simplebank.com/internal/controller"
-	"simplebank.com/internal/repository"
 	models "simplebank.com/pkg"
+	pkg "simplebank.com/pkg/params"
 )
-
-
 
 // APIHandler
 type Handler struct {
@@ -30,7 +28,7 @@ type CreateAccountParams struct {
 }
 
 func (handler *Handler) CreateAccount(ctx context.Context, arg CreateAccountParams) (models.Account, error) {
-	params := repository.CreateAccountParams{
+	params := pkg.CreateAccountParams{
 		Owner:    arg.Owner,
 		Currency: arg.Currency,
 		Balance:  arg.Balance,

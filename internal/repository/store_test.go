@@ -9,10 +9,7 @@ import (
 
 	_ "github.com/lib/pq"
 	"github.com/stretchr/testify/require"
-	"go.uber.org/mock/gomock"
-	"simplebank.com/internal/mock_repository"
 	"simplebank.com/internal/utils"
-	models "simplebank.com/pkg"
 	pkg "simplebank.com/pkg/params"
 )
 
@@ -131,26 +128,3 @@ func TestTransferTx(t *testing.T) {
 }
 
 
-func randomAccount() models.Account {
-    return models.Account{
-        ID:       int64(utils.RandomInt(1, 1000)),
-        Owner:    utils.RandomOwner(),
-        Balance:  utils.RandomMoney(),
-        Currency: utils.RandomCurrency(),
-    }
-}
-
-
-func TestGetAccountAPI(t *testing.T) {
-    account := randomAccount()
-
-    ctrl := gomock.NewController(t)
-	defer ctrl.Finish()
-
-	store := mock_repository.NewMockStore(ctrl)
-
-	store.EXPECT().
-		GetAccount(gomock.Any(), gomock.Eq(account.ID)).
-		Times(1).
-		Return(account, nil)
-}

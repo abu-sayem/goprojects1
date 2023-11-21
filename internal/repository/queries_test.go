@@ -10,10 +10,8 @@ import (
 	pkg "simplebank.com/pkg/params"
 
 	"context"
-
 	"simplebank.com/internal/utils"
 	models "simplebank.com/pkg"
-
 
 	_ "github.com/lib/pq"
 	"github.com/stretchr/testify/require"
